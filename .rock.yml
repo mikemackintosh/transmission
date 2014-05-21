@@ -1,0 +1,3 @@
+runtime: ruby20
+
+run: exec rackup config.ru --port 8000
