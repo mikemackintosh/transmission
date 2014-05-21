@@ -1,3 +1,3 @@
 require_relative 'transmission'
 
-run Transmission.new
+run Transmission::App
