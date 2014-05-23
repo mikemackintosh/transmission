@@ -11,6 +11,8 @@ module Transmission
     register Sinatra::ConfigFile
     register Sinatra::Session
 
+    config = [:app_path => File.dirname(__FILE__)]
+
     enable :sessions
     enable :method_override
     enable :logging
