@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'ruby_expect'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'net-ssh'
