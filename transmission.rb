@@ -7,7 +7,7 @@ require 'sinatra/session'
 require 'logger'
 require 'net/ssh'
 require 'rack-flash'
-require 'RubyExpect'
+require 'sshkey'
 
 module Transmission
 
@@ -21,29 +21,50 @@ module Transmission
     end
 
     def create_ssh_key( user, pass, email )
+
       if File.file?('#{settings.app_path}/keys/#{user}_rsa')
         false
       else
-        %x[ssh-keygen -t rsa -b 4093 -q -C "#{user},#{email}" -f #{settings.app_path}/keys/#{user}_rsa -N'#{pass}' ]
-        result = $?.to_i
-        if result == 0
-          true
-        else
-          false
-        end
+
+        k = SSHKey.generate(:type => "RSA", :bits => 4093, :comment => "#{user},#{email}", :passphrase => "#{pass}")
+
+        # Write Private Key
+        File.open("#{settings.app_path}/keys/#{user}_rsa", 'w') { |file| 
+          file.write(k.encrypted_private_key) 
+        }        
+
+        # Write Public Key
+        File.open("#{settings.app_path}/keys/#{user}_rsa.pub", 'w') { |file| 
+          file.write(k.public_key) 
+        }
+
+        true
 
       end
+
     end
 
     def check_ssh_key( user, pass )
-      # %x[ssh-keygen -y -f #{settings.app_path}/keys/#{user}_rsa -p'#{pass}' ]
-      exp = RubyExpect::Expect.spawn('ssh-keygen -y -f #{settings.app_path}/keys/#{user}_rsa', :debug => true)
-      exp.procedure do
-        each do
-          expect `passphrase: ` do
-            send pass
-          end
+      
+      file = "#{settings.app_path}/keys/#{user}_rsa"
+      if File.file?(file)
+        
+        private_key = OpenSSL::PKey::RSA.new(File.read(file), pass)
+        
+        k = SSHKey.new(private_key)
+        
+        public_key = File.read("#{file}.pub")
+        
+        if k.public_key == public_key 
+          puts "Authenticated Successfully"
+          true
+        else
+          puts "Authentication Fail"
+          true
         end
+      else
+        puts "Authentication Fail"
+        false
       end
     end
     
