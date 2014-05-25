@@ -1,0 +1,20 @@
+<table>
+	<thead>
+		<tr>
+			<th>From</th>
+			<th>Date</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @messages.each do |message| %>
+		<a href="/message/<%= message[:id] %>">
+		<tr>
+			<td><%= message[:from] %></td> 
+			<td><%= message[:date] %></td> 
+			<td><%= message[:status] %></td> 
+		</tr>
+		</a>
+		<% end %>
+	</tbody>
+</table>
