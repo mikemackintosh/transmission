@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-gem 'ruby_expect'
+gem 'sshkey'
+gem 'greenletters'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'net-ssh'
