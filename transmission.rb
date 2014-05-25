@@ -33,6 +33,12 @@ module Transmission
       
     end
 
+    get '/logout' do
+      # What goes here to kill the session?
+      session.clear
+      redirect '/login'
+    end
+
     def create_ssh_key( user, pass, email )
 
       if File.file?('#{settings.app_path}/keys/#{user}_rsa')
