@@ -2,7 +2,7 @@
 	<select name="user">
 	<% @users.each do |user| %>
 		<option value="<%=user%>"><%=user%></option>
-		<% end %>
+	<% end %>
 	</select>
 	<textarea name="message" placeholder="Enter your message here..."></textarea>
 	<button type="submit">Send!</button>
