@@ -2,11 +2,18 @@ module Transmission
   class App
   	
     get '/messages' do
-      
+      @messages = []
       @users = []
-      Dir["#{settings.app_path}/messages/#{session['username']}*"].each do |pub_files|
-        #user = /([A-Za-z0-9]+)_rsa/.match(pub_files).to_s.split('_')
-        #@users.push(user[0])
+      Dir["#{settings.app_path}/messages/#{session['username']}*"].each do |messages|
+        msg = /(.*)_(.*)_(.*)/.match(messages).to_s.split("_")
+        puts msg.inspect
+        message = {}
+        message[:id] = Digest::MD5.hexdigest(msg[0])
+        message[:from] = msg[1]
+        message[:date] = msg[2]
+        message[:status] = File.read(messages).to_s
+        puts message
+        @messages.push(message)
       end
 
       erb :messages
@@ -45,7 +52,8 @@ module Transmission
 
       # Write Message
       File.open("#{settings.app_path}/messages/#{target_user}_#{session['username']}_#{timestamp}", 'w') { |file| 
-        file.write(Base64.encode64(secure)) 
+        message = Base64.encode64(secure)
+        file.write( "#{message},0")
       }
       
       flash[:success] = "Message sent to #{target_user}!"
