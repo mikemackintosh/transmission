@@ -36,11 +36,12 @@ module Transmission
    			
    			session['username'] = params['username']
    			session['email'] = params['email']
+   			flash[:success] = "Account successfully created!"
 
    			redirect '/account'
 
    		else
-   			flash[:success] = "Please confirm your password!"
+   			flash[:failure] = "Please confirm your password!"
    		end
 
    		redirect back
@@ -49,7 +50,7 @@ module Transmission
 
   	# Account Details Page
     get '/account' do
-
+    	erb :index
     end
 
 
