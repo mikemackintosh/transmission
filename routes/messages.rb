@@ -3,12 +3,17 @@ module Transmission
   	
     get '/messages' do
       @messages = []
-      @users = []
+
       Dir["#{settings.app_path}/messages/#{session['username']}*"].each do |messages|
         msg = /(.*)_(.*)_(.*)/.match(messages).to_s.split("_")
-        puts msg.inspect
+        
+        # Lets get the tuplet
+        name = msg[0].split("/")
+        to_user = name.last()
+
+        # Create object
         message = {}
-        message[:id] = Digest::MD5.hexdigest(msg[0])
+        message[:id] = Digest::MD5.hexdigest("#{to_user}_#{msg[1]}_#{msg[2]}")
         message[:from] = msg[1]
         message[:date] = Time.at(msg[2].to_i)
         message[:status] = File.read(messages).to_s[-2,2].include?('0') ? 'unread' : 'read'
@@ -30,6 +35,7 @@ module Transmission
 
       # Get all messages for this user
       Dir["#{settings.app_path}/messages/#{session['username']}*"].each do |messages|
+        puts messages
         msg = /(.*)_(.*)_(.*)/.match(messages).to_s.split("_")
         
         # Lets get the tuplet
