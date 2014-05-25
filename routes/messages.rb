@@ -28,6 +28,11 @@ module Transmission
 
     post '/send' do
       @users = []
+      Dir["#{settings.app_path}/keys/*_rsa.pub"].each do |pub_files|
+        user = /([A-Za-z0-9]+)_rsa/.match(pub_files).to_s.split('_')
+        @users.push(user[0])
+      end
+
       target_user = params['user']
 
       target_public_key = "#{settings.app_path}/keys/#{target_user}_rsa.pub"
