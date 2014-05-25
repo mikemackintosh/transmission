@@ -2,6 +2,10 @@ module Transmission
   class App
   	
   	get '/login' do
+  		if session['username']
+  			redirect "/"
+  		end
+
   		erb :login
   	end
 
@@ -11,6 +15,7 @@ module Transmission
   			session['username'] = params['username']
    			redirect '/account'
    		else
+   			session = []
    			status 403
    			redirect back
    		end
@@ -18,6 +23,11 @@ module Transmission
 
   	# Sign Up page
   	get '/signup' do
+  		
+  		if session['username']
+  			redirect "/"
+  		end
+
   		erb :signup
   	end
 
@@ -38,7 +48,7 @@ module Transmission
    			session['email'] = params['email']
    			flash[:success] = "Account successfully created!"
 
-   			redirect '/account'
+   			redirect '/'
 
    		else
    			flash[:failure] = "Please confirm your password!"
@@ -48,11 +58,6 @@ module Transmission
 
  	end
 
-  	# Account Details Page
-    get '/account' do
-    	erb :index
-    end
-
-
   end
+
 end

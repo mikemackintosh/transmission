@@ -20,6 +20,16 @@ module Transmission
     	set :app_path, File.dirname(__FILE__)
     end
 
+    get '/' do
+      
+      if session['username'].nil?
+        redirect "/login"
+      end
+
+      erb :index
+      
+    end
+
     def create_ssh_key( user, pass, email )
 
       if File.file?('#{settings.app_path}/keys/#{user}_rsa')
