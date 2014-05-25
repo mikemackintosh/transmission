@@ -1,9 +1,9 @@
 <form action="/send" method="post">
 	<select name="user">
-	<% users.each do |user| %>
+	<% @users.each do |user| %>
 		<option value="<%=user%>"><%=user%></option>
 		<% end %>
 	</select>
-	<textarea value="message" placeholder="Enter your message here..."></textarea>
+	<textarea name="message" placeholder="Enter your message here..."></textarea>
 	<button type="submit">Send!</button>
 </form
