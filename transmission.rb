@@ -9,6 +9,8 @@ require 'net/ssh'
 require 'rack-flash'
 require 'sshkey'
 require 'date'
+require 'digest/md5'
+
 
 module Transmission
 
