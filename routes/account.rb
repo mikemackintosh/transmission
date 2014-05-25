@@ -13,7 +13,7 @@ module Transmission
    		if check_ssh_key( params['username'], params['password'] )
    			status 200
   			session['username'] = params['username']
-   			redirect '/account'
+   			redirect '/'
    		else
    			session = []
    			status 403
