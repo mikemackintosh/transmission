@@ -1,3 +1,4 @@
 keys/*rsa*
+messages/*
 /.bundle/*
 /vendor/*
