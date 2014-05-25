@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta content='en' http-equiv='content-language'>
+    <title>Transmissions</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body data-spy="scroll" data-target=".subnav">
+    <div class='navbar navbar-fixed-top'>
+      <div class='navbar-inner'>
+        <div class='container-fluid'>
+          <a class='btn btn-navbar' data-target='.nav-collapse' data-toggle='collapse'>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+          </a>
+          <a class='brand' hre[f='/'>Transmission</a>
+          <div class='nav-collapse'>
+            <ul class='nav'>
+              <li id='messages'>
+                <a href='/messages'>Messages</a>
+              </li>
+              <li id="send">
+                <a href='/send'>Send Message</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <%= erb :flashes %>
+      <%= yield %>
+    </div>
+  </body>
+</html>
