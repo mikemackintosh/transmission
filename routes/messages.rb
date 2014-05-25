@@ -11,7 +11,7 @@ module Transmission
         message[:id] = Digest::MD5.hexdigest(msg[0])
         message[:from] = msg[1]
         message[:date] = msg[2]
-        message[:status] = File.read(messages).to_s
+        message[:status] = File.read(messages).to_s[-2,2].include?('0') ? 'unread' : 'read'
         puts message
         @messages.push(message)
       end
