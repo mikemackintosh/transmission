@@ -48,19 +48,22 @@ module Transmission
       
       file = "#{settings.app_path}/keys/#{user}_rsa"
       if File.file?(file)
-        
-        private_key = OpenSSL::PKey::RSA.new(File.read(file), pass)
-        
-        k = SSHKey.new(private_key)
-        
-        public_key = File.read("#{file}.pub")
-        
-        if k.public_key == public_key 
-          puts "Authenticated Successfully"
-          true
-        else
-          puts "Authentication Fail"
-          true
+        begin
+          private_key = OpenSSL::PKey::RSA.new(File.read(file), pass)
+          
+          k = SSHKey.new(private_key)
+          
+          public_key = File.read("#{file}.pub")
+          
+          if k.public_key == public_key 
+            puts "Authenticated Successfully"
+            true
+          else
+            puts "Authentication Failed"
+            true
+          end
+        rescue
+          puts "Invalid passphrase"
         end
       else
         puts "Authentication Fail"
