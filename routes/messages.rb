@@ -10,7 +10,7 @@ module Transmission
         message = {}
         message[:id] = Digest::MD5.hexdigest(msg[0])
         message[:from] = msg[1]
-        message[:date] = msg[2]
+        message[:date] = Time.at(msg[2].to_i)
         message[:status] = File.read(messages).to_s[-2,2].include?('0') ? 'unread' : 'read'
         puts message
         @messages.push(message)
@@ -19,18 +19,28 @@ module Transmission
       erb :messages
     end
 
+    # This message needs to be validated
     get '/message/:msgid' do
       @uri = "#{request.path}?#{request.query_string}"
       erb :message_auth
     end
 
+    # This will display message
     post '/message/:msgid' do
-      message = {}
+
+      # Get all messages for this user
       Dir["#{settings.app_path}/messages/#{session['username']}*"].each do |messages|
         msg = /(.*)_(.*)_(.*)/.match(messages).to_s.split("_")
-        if params[:msgid] == Digest::MD5.hexdigest(msg[0])
+        
+        # Lets get the tuplet
+        name = msg[0].split("/")
+        to_user = name.last()
+
+        # Look for the matching message belonging to this user
+        if params[:msgid] == Digest::MD5.hexdigest("#{to_user}_#{msg[1]}_#{msg[2]}")
+          message = {}
           message[:from] = msg[1]
-          message[:date] = msg[2]
+          message[:date] = Time.at(msg[2].to_i)
           secure_message = File.read(messages).to_s[0..-3]
           private_key = OpenSSL::PKey::RSA.new(File.read("#{settings.app_path}/keys/#{session['username']}_rsa"), params[:password])
           content = private_key.private_decrypt Base64.decode64(secure_message)
@@ -44,7 +54,7 @@ module Transmission
           @message = message          
         end
       end
-
+      
       erb :message
           
     end
@@ -76,12 +86,14 @@ module Transmission
       timestamp = Time.now.utc.to_i
 
       # Write Message
-      File.open("#{settings.app_path}/messages/#{target_user}_#{session['username']}_#{timestamp}", 'w') { |file| 
+      target_file = "#{target_user}_#{session['username']}_#{timestamp}"
+      File.open("#{settings.app_path}/messages/#{target_file}", 'w') { |file| 
         message = Base64.encode64(secure)
         file.write( "#{message},0")
       }
       
-      flash[:success] = "Message sent to #{target_user}!"
+      msgid = Digest::MD5.hexdigest(target_file)
+      flash[:success] = "Message sent to #{target_user}! Message: <a href=\"#{request.base_url}/message/#{msgid}\">#{request.base_url}/message/#{msgid}</a>"
 
       erb :send
     end
