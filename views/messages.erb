@@ -8,11 +8,19 @@
 	</thead>
 	<tbody>
 		<% @messages.each do |message| %>
-		<a href="/message/<%= message[:id] %>">
 		<tr>
-			<td><%= message[:from] %></td> 
-			<td><%= message[:date] %></td> 
-			<td><%= message[:status] %></td> 
+			<td>		
+				<a href="/message/<%= message[:id] %>">
+<%= message[:from] %></a>
+			</td> 
+			<td>		
+				<a href="/message/<%= message[:id] %>">
+<%= message[:date] %></a>
+			</td> 
+			<td>		
+				<a href="/message/<%= message[:id] %>">
+<%= message[:status] %></a>
+			</td> 
 		</tr>
 		</a>
 		<% end %>
